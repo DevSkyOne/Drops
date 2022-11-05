@@ -1,5 +1,20 @@
-# Drops
-Ein Bot der verschiede Drops (wie z.B. Discord Nitro Codes) in einem Channel "spawnen" kann
+<br />
+<div align="center">
+  <a href="https://discord.gg/desky">
+    <img src="https://github.com/DevSkyOne/Drops/raw/main/assets/present.png" alt="Logo">
+  </a>
+
+  <p align="center">
+    Ein Bot der verschiede Drops (wie z.B. Discord Nitro Codes) in einem Channel "spawnen" kann.
+    <br />
+    <a href="https://discord.com/users/216487432667791360"><strong>Contact »</strong></a>
+    <br />
+    <br />
+    <a href="https://discord.gg/devsky">Main-Server</a>
+    ·
+    <a href="https://devsky.one">Website</a>
+  </p>
+</div>
 
 
 

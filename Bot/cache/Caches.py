@@ -1,4 +1,4 @@
 from Bot.cache.LRUCache import LRUCache
 
-#  user_cache = LRUCache(1000)
+guild_cache = LRUCache(1000)
 

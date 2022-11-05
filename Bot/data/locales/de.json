@@ -3,10 +3,13 @@
     "drop": {
       "title": "Ein wildes Drop erscheint",
       "open": "Öffnen",
+      "in_progress": "Bitte warten...",
       "opened": {
           "title": "Der Drop wurde geöffnet",
           "field": "Informationen",
-          "value": "Der Drop wurde von %{user} geöffnet.\nEs enthält **%{value}**."
+          "value": "Der Drop wurde von %{user} geöffnet.\nEs enthält **%{value}**.",
+          "claimed": "Du hast den Drop geöffnet und **%{value}** erhalten.",
+          "failed": "Du warst leider zu langsam. Jemand anderes hat diesen Drop schon geöffnet."
       }
     }
   }

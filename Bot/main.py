@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from pathlib import Path
 import i18n
@@ -6,6 +7,9 @@ import discord
 from discord.ext import commands
 
 from Bot.data.config import *
+from Database import get_pool
+import aiomysql
+import aiofiles
 
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] - %(levelname)s#%(name)s: %(message)s')
 log = logging.getLogger('BOT-MAIN')
@@ -22,6 +26,24 @@ bot = commands.Bot(
 )
 
 
+async def init_db() -> None:
+    pool: aiomysql.Pool = await get_pool()
+    async with aiofiles.open("Database/structure.sql", "r") as fp:
+        struct = await fp.read()
+
+    async with pool.acquire() as connection:
+        connection: aiomysql.Connection
+        cursor: aiomysql.Cursor = await connection.cursor()
+        for query in struct.split(";"):
+            try:
+                await cursor.execute(query)
+            except Exception as e:
+                log.error(e)
+                continue
+    pool.close()
+    await pool.wait_closed()
+
+
 def load_bot():
     log.info('Starting...')
     log.info('Loading translations...')
@@ -31,6 +53,8 @@ def load_bot():
     i18n.set('fallback', 'en')
     i18n.set('locale', 'de')
     log.info('Translations loaded.')
+    log.info("Initialising Database...")
+    asyncio.run(init_db())
     cogs = [p.stem for p in Path('Bot/cogs').glob('**/*.py') if not p.name.startswith('__')]
     log.info('Loading %d extensions...', len(cogs))
 

@@ -1,8 +1,10 @@
 import discord
+import i18n
 from discord import Localizations, ApplicationCommandInteraction, SlashCommandOption
 from discord.ext import commands
 
 from Bot.data.dropbuilder import drop_in_channel, build_drop_embed_opened
+from Database.models import GuildData
 
 drops = {}
 
@@ -32,7 +34,8 @@ class DropCommand(commands.Cog):
 		]
 	)
 	async def drop(self, ctx: ApplicationCommandInteraction, droptype: str, dropvalue: str) -> None:
-		await ctx.respond('Drop in progress...', hidden=True)
+		locale: str = (await GuildData(ctx.guild_id).load()).language
+		await ctx.respond(f'{i18n.t("drop.in_progress", locale=locale)}', hidden=True)
 		message = await drop_in_channel(ctx.channel)
 		drops[message.id] = {
 			'type': droptype,
@@ -42,6 +45,7 @@ class DropCommand(commands.Cog):
 
 	@commands.Cog.on_click('drop:open')
 	async def open_drop(self, ctx: discord.ComponentInteraction, _) -> None:
+		locale: str = (await GuildData(ctx.guild_id).load()).language
 		if drops.get(ctx.message.id).get('receiver') is None:
 			drops[ctx.message.id] = {
 				'type': drops.get(ctx.message.id).get('type'),
@@ -49,11 +53,12 @@ class DropCommand(commands.Cog):
 				'receiver': ctx.user.id
 			}
 			await ctx.message.edit(
-				embeds=[build_drop_embed_opened(ctx.author, value=drops.get(ctx.message.id).get('type'))],
+				embeds=[await build_drop_embed_opened(ctx.author, value=drops.get(ctx.message.id).get('type'), guild_id=ctx.guild_id)],
 				components=[])
-			await ctx.respond(f'You opened the drop! {drops.get(ctx.message.id).get("value")}', hidden=True)
+			await ctx.respond(f'{i18n.t("drop.opened.claimed", value=drops.get(ctx.message.id).get("value"), locale=locale)}',
+			                  hidden=True)
 		else:
-			await ctx.respond('The drop is already open!', hidden=True)
+			await ctx.respond(f'{i18n.t("drop.opened.failed", locale=locale)}', hidden=True)
 
 
 def setup(bot: commands.Bot) -> None:

@@ -16,7 +16,9 @@ bot = commands.Bot(
     command_prefix=commands.when_mentioned_or('dr!'),
     strip_after_prefix=True,
     sync_commands=True,
-    delete_not_existing_commands=True
+    delete_not_existing_commands=True,
+    intents=intents,
+    activity=discord.Activity(type=discord.ActivityType.competing, name='Searching for drops'),
 )
 
 
@@ -24,11 +26,10 @@ def load_bot():
     log.info('Starting...')
     log.info('Loading translations...')
     i18n.set('file_format', 'json')
+    i18n.set('filename_format', '{locale}.{format}')
+    i18n.load_path.append(Path('Bot/data/locales'))
     i18n.set('fallback', 'en')
     i18n.set('locale', 'de')
-    i18n.add_translation('drop.title', 'Ein wildes Drop erscheint', locale='de')
-    i18n.add_translation('drop.title', 'A wild drop appears', locale='en')
-    i18n.add_translation('drop.title', 'Un drop sauvage apparaît', locale='fr')
     log.info('Translations loaded.')
     cogs = [p.stem for p in Path('Bot/cogs').glob('**/*.py') if not p.name.startswith('__')]
     log.info('Loading %d extensions...', len(cogs))

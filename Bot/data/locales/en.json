@@ -1,0 +1,13 @@
+{
+  "en": {
+    "drop": {
+      "title": "A wild drop appears",
+      "open": "Open drop",
+      "opened": {
+          "title": "The drop has been opened",
+          "field": "Information's",
+          "value": "The drop has been opened by %{user}.\nIt contains %{value}."
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "de": {
+    "drop": {
+      "title": "Ein wildes Drop erscheint",
+      "open": "Öffnen",
+      "opened": {
+          "title": "Der Drop wurde geöffnet",
+          "field": "Informationen",
+          "value": "Der Drop wurde von %{user} geöffnet.\nEs enthält **%{value}**."
+      }
+    }
+  }
+}

@@ -7,9 +7,14 @@
       "opened": {
           "title": "The drop has been opened",
           "field": "Information's",
-          "value": "The drop has been opened by %{user}.\nIt contains %{value}.",
+          "value": "The drop has been opened by %{user}.\nIt contains **%{value}**.",
           "claimed": "You have claimed the drop and found **%{value}**.",
           "failed": "You have failed to claim the drop."
+      }
+    },
+    "configure": {
+      "language": {
+        "success": "Language changed to `%{language}`."
       }
     }
   }

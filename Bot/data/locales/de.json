@@ -11,6 +11,11 @@
           "claimed": "Du hast den Drop geöffnet und **%{value}** erhalten.",
           "failed": "Du warst leider zu langsam. Jemand anderes hat diesen Drop schon geöffnet."
       }
+    },
+    "configure": {
+      "language": {
+        "success": "Die Sprache wurde erfolgreich zu `%{language}` geändert."
+      }
     }
   }
 }

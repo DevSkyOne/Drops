@@ -1,7 +1,4 @@
 git+https://github.com/mccoderpy/discord.py-message-components.git@developer
 git+https://github.com/mccoderpy/color-pprint.git
-aiomysql
-aiofiles
-aiohttp[speedups]
-aiocron
-random-text-generator==1.1.0
+python-i18n
+aiomysql~=0.1.1

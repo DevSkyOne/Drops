@@ -9,3 +9,10 @@ if IS_LOCAL:
     MAIN_GUILD = 829654827859836971  # https://discord.gg/YecvKa8aUv
 else:
     MAIN_GUILD = 443790920576532490  # https://discord.gg/devsky
+
+
+# Database connection
+DB_HOST = "localhost:3306"
+DB_USER = "root"
+DB_PASSWORD = "root"
+DB_NAME = "dropbot"

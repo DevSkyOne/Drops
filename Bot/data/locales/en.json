@@ -12,9 +12,16 @@
           "failed": "You have failed to claim the drop."
       }
     },
+    "preset": {
+      "not_found": "Preset `%{preset}` not found",
+      "no_value": "Preset `%{preset}` has no value"
+    },
     "configure": {
       "language": {
         "success": "Language changed to `%{language}`."
+      },
+      "preset": {
+        "success": "Preset added."
       }
     }
   }

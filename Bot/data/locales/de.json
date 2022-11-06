@@ -12,9 +12,16 @@
           "failed": "Du warst leider zu langsam. Jemand anderes hat diesen Drop schon geöffnet."
       }
     },
+    "preset": {
+      "not_found": "Preset `%{preset}` nicht gefunden.",
+      "no_value": "Preset `%{preset}` hat keinen Wert."
+    },
     "configure": {
       "language": {
         "success": "Die Sprache wurde erfolgreich zu `%{language}` geändert."
+      },
+      "preset": {
+        "success": "Preset hinzugefügt."
       }
     }
   }

@@ -1,4 +1,6 @@
-from aiomysql import Pool
+import datetime
+
+from aiomysql import Pool, DictCursor
 
 from Bot.cache.Caches import guild_cache
 from Database import get_pool
@@ -9,7 +11,7 @@ class GuildData:
 	def __init__(self, guild_id: int):
 		self.guild_id = guild_id
 		self.language = "en"
-		self.presets = []
+		self.presets = list()
 		self.cronjob = None
 		self.cronjob_presets = []
 
@@ -35,16 +37,17 @@ class GuildData:
 				print("Loaded guild entry for guild with id", self.guild_id)
 		pool.close()
 		await pool.wait_closed()
-		#  await self.load_presets()
+		await self.load_presets()
 		guild_cache[self.guild_id] = self
 		return self
 
 	async def load_presets(self):
 		pool: Pool = await get_pool()
 		async with pool.acquire() as conn:
-			async with conn.cursor() as cur:
-				await cur.execute("SELECT * FROM presets WHERE guild_id = %s", (self.guild_id,))
-				data = await cur.fetchall()
+			async with conn.cursor(DictCursor) as cur:
+				await cur.execute("SELECT id, guild_id, name, description, value, fetch_credentials, reward_credentials "
+				                  "FROM presets WHERE guild_id = %s", (self.guild_id,))
+				data = [PresetData(**preset) for preset in await cur.fetchall()]
 				if data is None:
 					print("No presets found for guild with id", self.guild_id)
 					return
@@ -66,7 +69,8 @@ class GuildData:
 				print("Saved guild entry for guild with id", self.guild_id)
 		pool.close()
 		await pool.wait_closed()
-		#  await self.save_presets()
+		await self.save_presets()
+		guild_cache[self.guild_id] = self
 
 	async def delete(self):
 		pool: Pool = await get_pool()
@@ -81,13 +85,15 @@ class GuildData:
 
 class PresetData:
 
-	def __init__(self, _id: int = -1):
-		self.id = _id
-		self.name = ""
-		self.description = ""
-		self.fetch_credentials = None
-		self.reward_credentials = None
-		self.load()
+	def __init__(self, id: int = -1, guild_id: int = -1, name: str = "", description: str = "", value: str = None,
+	             fetch_credentials: int = None, reward_credentials: int = None):
+		self.id = id
+		self.guild_id = guild_id
+		self.name = name
+		self.description = description
+		self.value = value
+		self.fetch_credentials = fetch_credentials
+		self.reward_credentials = reward_credentials
 
 	async def load(self):
 		pool: Pool = await get_pool()
@@ -96,24 +102,34 @@ class PresetData:
 				await cur.execute("SELECT * FROM presets WHERE id = %s", (self.id,))
 				data = await cur.fetchone()
 				if data is None:
-					await cur.execute("INSERT INTO presets (name, description) VALUES (%s, %s)", (self.name, self.description))
+					await cur.execute("INSERT INTO presets (guild_id, name, description) VALUES (%s, %s, %s)",
+					                  (self.guild_id, self.name, self.description))
 					await conn.commit()
 					self.id = cur.lastrowid
 					print("Created new preset entry with id", self.id)
-					return
-				self.name = data[1]
-				self.description = data[2]
+					return self
+				self.guild_id = data[1]
+				self.name = data[2]
+				self.description = data[3]
+				self.value = data[4]
 				print("Loaded preset entry with id", self.id)
 		pool.close()
 		await pool.wait_closed()
+		return self
 
 	async def save(self):
 		pool: Pool = await get_pool()
 		async with pool.acquire() as conn:
 			async with conn.cursor() as cur:
-				await cur.execute("UPDATE presets SET name = %s, description = %s WHERE id = %s", (self.name,
-				                                                                                   self.description,
-				                                                                                   self.id))
+				if self.value is None:
+					await cur.execute("UPDATE presets SET name = %s, description = %s WHERE id = %s", (self.name,
+					                                                                                   self.description,
+					                                                                                   self.id))
+				else:
+					await cur.execute("UPDATE presets SET name = %s, description = %s, value = %s WHERE id = %s", (self.name,
+					                                                                                               self.description,
+					                                                                                               self.value,
+					                                                                                               self.id))
 				await conn.commit()
 				print("Saved preset entry with id", self.id)
 		pool.close()
@@ -126,26 +142,6 @@ class PresetData:
 				await cur.execute("DELETE FROM presets WHERE id = %s", (self.id,))
 				await conn.commit()
 				print("Deleted preset entry with id", self.id)
-		pool.close()
-		await pool.wait_closed()
-
-	async def add_to_guild(self, guild_id: int):
-		pool: Pool = await get_pool()
-		async with pool.acquire() as conn:
-			async with conn.cursor() as cur:
-				await cur.execute("INSERT INTO guilds_presets (guild_id, preset_id) VALUES (%s, %s)", (guild_id, self.id))
-				await conn.commit()
-				print("Added preset with id", self.id, "to guild with id", guild_id)
-		pool.close()
-		await pool.wait_closed()
-
-	async def remove_from_guild(self, guild_id: int):
-		pool: Pool = await get_pool()
-		async with pool.acquire() as conn:
-			async with conn.cursor() as cur:
-				await cur.execute("DELETE FROM guilds_presets WHERE guild_id = %s AND preset_id = %s", (guild_id, self.id))
-				await conn.commit()
-				print("Removed preset with id", self.id, "from guild with id", guild_id)
 		pool.close()
 		await pool.wait_closed()
 

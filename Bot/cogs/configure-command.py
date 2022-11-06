@@ -45,7 +45,7 @@ class ConfigureCommand(commands.Cog):
 		guild_data = await GuildData(ctx.guild_id).load()
 		guild_data.language = language
 		await guild_data.save()
-		await ctx.respond(f'{i18n.t("configure.language.success", language=language)}', hidden=True)
+		await ctx.respond(f'{i18n.t("configure.language.success", language=language, locale=language)}', hidden=True)
 
 
 def setup(bot):

@@ -53,7 +53,7 @@ class ConfigurePresetsCommand(commands.Cog):
 		preset_data.value = value
 		guild_data.presets.append(preset_data)
 		await guild_data.save()
-		await ctx.respond(f'{i18n.t("configure.preset.success", language=guild_data.language)}', hidden=True)
+		await ctx.respond(f'{i18n.t("configure.preset.success", locale=guild_data.language)}', hidden=True)
 
 
 def setup(bot):

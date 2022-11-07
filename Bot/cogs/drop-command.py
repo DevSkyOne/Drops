@@ -14,6 +14,12 @@ class DropCommand(commands.Cog):
 	def __init__(self, bot) -> None:
 		self.bot: commands.Bot = bot
 
+	@commands.Cog.listener()
+	async def on_ready(self):
+		print(f'Bot is on {len(self.bot.guilds)} guilds')
+		for guild in self.bot.guilds:
+			print(f'Guild: {guild.name} ({guild.id})')
+
 	@commands.Cog.slash_command(
 		base_name='drop',
 		name='now',

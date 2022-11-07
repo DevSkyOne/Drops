@@ -1,7 +1,7 @@
 import discord
 import i18n
 from discord import Localizations, ApplicationCommandInteraction, SlashCommandOption, AutocompleteInteraction, \
-	SlashCommandOptionChoice
+	SlashCommandOptionChoice, Forbidden
 from discord.ext import commands
 
 from Bot.data.dropbuilder import drop_in_channel, build_drop_embed_opened
@@ -111,8 +111,16 @@ class DropCommand(commands.Cog):
 			await ctx.message.edit(
 				embeds=[await build_drop_embed_opened(ctx.author, value=drops.get(ctx.message.id).get('type'), guild_id=ctx.guild_id)],
 				components=[])
-			await ctx.respond(f'{i18n.t("drop.opened.claimed", value=drops.get(ctx.message.id).get("value"), locale=locale)}',
-			                  hidden=True)
+			claimed_message = i18n.t("drop.opened.claimed", value=drops.get(ctx.message.id).get("value"), locale=locale)
+			await ctx.respond(f'{claimed_message}', hidden=True)
+			#  Open private channel with user
+			try:
+				if ctx.author.dm_channel is None:
+					await ctx.author.create_dm()
+				await ctx.author.dm_channel.send(claimed_message)
+			except Forbidden as e:
+				print(e)
+				pass
 		else:
 			await ctx.respond(f'{i18n.t("drop.opened.failed", locale=locale)}', hidden=True)
 

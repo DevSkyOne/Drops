@@ -14,7 +14,7 @@
     ·
     <a href="https://devsky.one">Website</a>
     ·
-    <a href="https://github.com/mccoderpy/discord.py-message-components">Discord4Py (Libary)</a>
+    <a href="https://discord4py.dev/tree/developer" alt="discord4py is the Discord API-Wrapper the Drops-Bot uses">discord4py (library)</a>
   </p>
 </div>
 

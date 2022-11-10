@@ -1,6 +1,6 @@
 <br />
 <div align="center">
-  <a href="https://discord.gg/desky">
+  <a href="https://discord.gg/devsky">
     <img src="https://github.com/DevSkyOne/Drops/raw/main/assets/present.png" height=200 width=200 alt="Logo">
   </a>
 
